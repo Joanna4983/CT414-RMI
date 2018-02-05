@@ -15,10 +15,10 @@ public interface Assessment_Interface extends Serializable {
 	public Date getClosingDate();
 
 	// Return a list of all questions and anser options
-	public List<Question_Interface> getQuestions();
+	public List<Question> getQuestions();//ch:Question_Interface->Question
 
 	// Return one question only with answer options
-	public Question_Interface getQuestion(int questionNumber) throws InvalidQuestionNumber;
+	public Question getQuestion(int questionNumber) throws InvalidQuestionNumber;//ch:Question_Interface->Question
 
 	// Answer a particular question
 	public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber;

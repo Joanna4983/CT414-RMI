@@ -28,6 +28,10 @@ public class Assessment implements Assessment_Interface {
 
 	@Override
 	public String getInformation() {
+		String info = this.info;
+		for(Question q: mcqs) {
+			info += "\nQuestion #" + q.getQuestionNumber() + "\t" + q.getQuestionDetail() + "\nAnswer Options: " + q.getAnswerOptions();
+		}
 		// TODO Auto-generated method stub
 		return info;
 	}
@@ -41,16 +45,21 @@ public class Assessment implements Assessment_Interface {
 
 	
 	@Override
-	public List<Question_Interface> getQuestions() {
+	public List<Question> getQuestions() {
+		
+		
 		// TODO Auto-generated method stub
-		return null;
+		return this.mcqs;
 	}
 
 	
 	@Override
-	public Question_Interface getQuestion(int questionNumber) throws InvalidQuestionNumber {
+	public Question getQuestion(int questionNumber) throws InvalidQuestionNumber {
 		// TODO Auto-generated method stub
-		return null;
+		if(questionNumber <= mcqs.size()) {
+			return mcqs.get(questionNumber);
+		}
+		throw new InvalidQuestionNumber();
 	}
 
 	
