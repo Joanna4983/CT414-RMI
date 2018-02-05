@@ -1,18 +1,23 @@
-// Question.java
-
 package ct414;
 
-import java.io.Serializable;
+public class Question implements Question_Interface {
 
-public interface Question extends Serializable {
+	@Override
+	public int getQuestionNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-	// Return the question number
-	public int getQuestionNumber();
+	@Override
+	public String getQuestionDetail() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	// Return the question text
-	public String getQuestionDetail();
-
-	// Return the possible answers to select from
-	public String[] getAnswerOptions();
+	@Override
+	public String[] getAnswerOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

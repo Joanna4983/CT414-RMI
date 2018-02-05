@@ -1,38 +1,77 @@
-// Assessment.java 
-
+/**
+ * 
+ */
 package ct414;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.io.Serializable;
 
-public interface Assessment extends Serializable {
+/**
+ * @author root
+ *
+ */
+public class Assessment implements Assessment_Interface {
+	
+	private String info;
+	private Date close_d;
+	private List<Question> mcqs = new ArrayList<Question>();
+	private int id;
+	
+	public Assessment(String info, Date close_d, List<Question> mcqs, int id) {
+		this.info = info;
+		this.close_d = close_d;
+		this.mcqs = mcqs;
+		this.id = id;
+		
+	}
 
-	// Return information about the assessment	
-	public String getInformation();
+	@Override
+	public String getInformation() {
+		// TODO Auto-generated method stub
+		return info;
+	}
 
-	// Return the final date / time for submission of completed assessment
-	public Date getClosingDate();
+	
+	@Override
+	public Date getClosingDate() {
+		// TODO Auto-generated method stub
+		return close_d;
+	}
 
-	// Return a list of all questions and anser options
-	public List<Question> getQuestions();
+	
+	@Override
+	public List<Question_Interface> getQuestions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	// Return one question only with answer options
-	public Question getQuestion(int questionNumber) throws 
-		InvalidQuestionNumber;
+	
+	@Override
+	public Question_Interface getQuestion(int questionNumber) throws InvalidQuestionNumber {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	// Answer a particular question
-	public void selectAnswer(int questionNumber, int optionNumber) throws
-		InvalidQuestionNumber, InvalidOptionNumber;
+	
+	@Override
+	public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber {
+		// TODO Auto-generated method stub
 
-	// Return selected answer or zero if none selected yet
-	public int getSelectedAnswer(int questionNumber);
+	}
 
-	// Return studentid associated with this assessment object
-	// This will be preset on the server before object is downloaded
-	public int getAssociatedID();
+	
+	@Override
+	public int getSelectedAnswer(int questionNumber) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
+	@Override
+	public int getAssociatedID() {
+		// TODO Auto-generated method stub
+		return id;
+	}
 
 }
-
-
-
