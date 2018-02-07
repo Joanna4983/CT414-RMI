@@ -60,7 +60,14 @@ public class ExamEngine implements ExamServer {
 
     // Return an Assessment object associated with a particular course code
     public Assessment_Interface getAssessment(int token, int studentid, String courseCode) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-
+    	//if session hasn't expired
+    	//if student logged in
+    	//check course code somewhere?
+    	for(Student s: students) {
+    		if(courseCode == s.getStudentCourseCode() && studentid == s.getStudentId()) {
+    			//return student assessment
+    		}
+    	}
         // TBD: You need to implement this method!
         // For the moment method just returns an empty or null value to allow it to compile
 
