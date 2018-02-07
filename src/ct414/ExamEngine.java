@@ -13,6 +13,7 @@ public class ExamEngine implements ExamServer {
 	//some session var here: new class? or impl here?
 	private List<Student> students;
 	private List<Assessment> assessments;
+	private List<Session> sessions;
 	
 
     // Constructor is required
@@ -21,6 +22,7 @@ public class ExamEngine implements ExamServer {
         //inst session here ?
         students = new ArrayList<Student>();
         assessments = new ArrayList<Assessment>();
+        sessions = new ArrayList<Session>();
         
         
         students.add(new Student(123456, "Hi", "Hi")); //testing
@@ -45,11 +47,15 @@ public class ExamEngine implements ExamServer {
 
     // Return a summary list of Assessments currently available for this studentid
     public List<String> getAvailableSummary(int token, int studentid) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-    		
-    	for(Assessment a: assessments) {
-    		if(studentid == a.getAssociatedID()) {
-    			a.getInformation();
-    		}
+    	for(Session s: sessions) {
+	    	if(token == s.isActive() && studentid == s.getAssociatedId()) {
+		    	for(Assessment a: assessments) {
+		    		if(studentid == a.getAssociatedID()) {
+		    			a.getInformation();
+		    		}
+		    	}
+		    	break; // no point looping through ALL sessions -> once correct one found + job done can stop
+	    	}
     	}
     	throw new NoMatchingAssessment("[-] There are no assessmets for " + studentid + ".");
     	
@@ -63,15 +69,14 @@ public class ExamEngine implements ExamServer {
     	//if session hasn't expired
     	//if student logged in
     	//check course code somewhere?
-    	for(Student s: students) {
-    		if(courseCode == s.getStudentCourseCode() && studentid == s.getStudentId()) {
-    			//return student assessment
+    	for(Assessment a: assessments) {
+    		if(courseCode == a.getCourseCode() && studentid == a.getAssociatedID()) {
+    			return a;
     		}
     	}
         // TBD: You need to implement this method!
         // For the moment method just returns an empty or null value to allow it to compile
-
-        return null;
+    	throw new NoMatchingAssessment("[-] Tough luck. Something went wrong.");
     }
 
     // Submit a completed assessment

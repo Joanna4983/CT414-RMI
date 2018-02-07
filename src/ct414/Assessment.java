@@ -17,13 +17,19 @@ public class Assessment implements Assessment_Interface {
 	private Date close_d;
 	private List<Question> mcqs = new ArrayList<Question>();
 	private int id;
+	private String course_code;
 	
-	public Assessment(String info, Date close_d, List<Question> mcqs, int id) {
+	public Assessment(String info, Date close_d, List<Question> mcqs, int id, String c_c) {
 		this.info = info;
 		this.close_d = close_d;
 		this.mcqs = mcqs;
 		this.id = id;
+		this.course_code = c_c;
 		
+	}
+	
+	public String getCourseCode() {
+		return this.course_code;
 	}
 
 	@Override
