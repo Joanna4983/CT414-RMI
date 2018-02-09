@@ -15,6 +15,7 @@ public class ExamEngine implements ExamServer {
 	private List<Student> students;
 	private List<Assessment> assessments;
 	private List<Session> sessions;
+	private List<Question> mcqs;
 	
 
     // Constructor is required
@@ -24,9 +25,16 @@ public class ExamEngine implements ExamServer {
         students = new ArrayList<Student>();
         assessments = new ArrayList<Assessment>();
         sessions = new ArrayList<Session>();
+        mcqs = new ArrayList<Question>();
         
+        //testing
+        students.add(new Student(12345678, "GY350", "coder4567")); 
+        students.add(new Student(12312312, "GY350", "superStudent123"));
         
-        students.add(new Student(12345678, "Hi", "Hi")); //testing
+        String[] a = {"6", "5", "8"};
+        mcqs.add(new Question(1, "What is 2^3?", a, "8"));
+        
+        assessments.add(new Assessment("Assessment 1", new Date(new Date().getTime()+(7*60*60*1000)), mcqs, 12345678, "GY350"));
     }
 
     // Implement the methods defined in the ExamServer interface...
@@ -35,6 +43,7 @@ public class ExamEngine implements ExamServer {
     	
     	for(Student s: students) {
     		if(studentid == s.getStudentId() && password.equals(s.getStudentPassword())) {
+    			sessions.add(new Session(studentid));
     			System.out.println("[+] " + studentid + " has been logged in.");
     			//login user
     			//activate session now
@@ -118,7 +127,7 @@ public class ExamEngine implements ExamServer {
             String name = "ExamServer";
             ExamServer engine = new ExamEngine();
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
-            stub.login(12345678, "Hi");
+            stub.login(12345678, "coder4567");
             //changed getRegistry() to createRegistry(int) : was throwing java.rmi.UnmarshalException and java.lang.ClassNotFoundException otherwise
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);

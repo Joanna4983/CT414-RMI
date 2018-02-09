@@ -7,7 +7,7 @@ public class Question implements Question_Interface {
 	private String actual_question;
 
 	
-	public Question(int qn, String[] options, String actual_question) {
+	public Question(int qn, String actual_question, String[] options, String answer) {
 		this.qn = qn;
 		this.options = options;
 		this.actual_question = actual_question;
