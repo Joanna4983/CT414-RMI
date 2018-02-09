@@ -6,6 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ExamEngine implements ExamServer {
@@ -25,7 +26,7 @@ public class ExamEngine implements ExamServer {
         sessions = new ArrayList<Session>();
         
         
-        students.add(new Student(123456, "Hi", "Hi")); //testing
+        students.add(new Student(12345678, "Hi", "Hi")); //testing
     }
 
     // Implement the methods defined in the ExamServer interface...
@@ -66,12 +67,15 @@ public class ExamEngine implements ExamServer {
 
     // Return an Assessment object associated with a particular course code
     public Assessment_Interface getAssessment(int token, int studentid, String courseCode) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-    	//if session hasn't expired
-    	//if student logged in
     	//check course code somewhere?
-    	for(Assessment a: assessments) {
-    		if(courseCode == a.getCourseCode() && studentid == a.getAssociatedID()) {
-    			return a;
+    	for(Session s: sessions) {
+    		if(token == s.isActive() && studentid == s.getAssociatedId()) {
+		    	for(Assessment a: assessments) {
+		    		if(courseCode == a.getCourseCode() && studentid == a.getAssociatedID()) {
+		    			return a;
+		    		}
+		    	}
+		    	break; // same as above
     		}
     	}
         // TBD: You need to implement this method!
@@ -82,10 +86,15 @@ public class ExamEngine implements ExamServer {
     // Submit a completed assessment
     public void submitAssessment(int token, int studentid, Assessment_Interface completed) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 
-    	for(Assessment a: assessments) {
-    		if(studentid == a.getAssociatedID()) { // and date?
-    			//mark as completed
-    			System.out.println("[+] The submission for " + studentid + " has been successful.");
+    	for(Session s: sessions) {
+    		if(token == s.isActive() && studentid == s.getAssociatedId()) {
+		    	for(Assessment a: assessments) {
+		    		if(studentid == a.getAssociatedID() && new Date().before(a.getClosingDate())) { 
+		    			//mark as completed
+		    			System.out.println("[+] The submission for " + studentid + " has been successful.");
+		    		}
+		    	}
+		    	break; //same as above
     		}
     	}
     	throw new NoMatchingAssessment("[-] The submission for " + studentid + "was unsuccessful.");
@@ -109,7 +118,7 @@ public class ExamEngine implements ExamServer {
             String name = "ExamServer";
             ExamServer engine = new ExamEngine();
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
-            stub.login(14407508, "Hi");
+            stub.login(12345678, "Hi");
             //changed getRegistry() to createRegistry(int) : was throwing java.rmi.UnmarshalException and java.lang.ClassNotFoundException otherwise
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);
