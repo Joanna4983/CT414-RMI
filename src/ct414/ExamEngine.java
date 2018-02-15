@@ -47,7 +47,7 @@ public class ExamEngine implements ExamServer {
     			System.out.println("[+] " + studentid + " has been logged in.");
     			//login user
     			//activate session now
-    			return 0;
+    			return 1;
     		}
     	}
     	throw new UnauthorizedAccess("[-] User " + studentid + " does not exist in our system.");
@@ -57,30 +57,36 @@ public class ExamEngine implements ExamServer {
 
     // Return a summary list of Assessments currently available for this studentid
     public List<String> getAvailableSummary(int token, int studentid) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
+    	ArrayList<String> availableAssessments = new ArrayList<String>();
     	for(Session s: sessions) {
 	    	if(token == s.isActive() && studentid == s.getAssociatedId()) {
 		    	for(Assessment a: assessments) {
 		    		if(studentid == a.getAssociatedID()) {
-		    			a.getInformation();
+		    			availableAssessments.add(a.getInformation());
 		    		}
 		    	}
 		    	break; // no point looping through ALL sessions -> once correct one found + job done can stop
 	    	}
     	}
-    	throw new NoMatchingAssessment("[-] There are no assessmets for " + studentid + ".");
-    	
+    	if (availableAssessments.size() > 0) {
+    		return availableAssessments;
+    	} else {
+    		throw new NoMatchingAssessment("[-] There are no assessments for " + studentid + ".");
+    	}
         // TBD: You need to implement this method!
         // For the moment method just returns an empty or null value to allow it to compile
 
     }
 
     // Return an Assessment object associated with a particular course code
-    public Assessment_Interface getAssessment(int token, int studentid, String courseCode) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
+    public Assessment getAssessment(int token, int studentid, String courseCode) throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
     	//check course code somewhere?
+    	boolean found = false;
     	for(Session s: sessions) {
     		if(token == s.isActive() && studentid == s.getAssociatedId()) {
 		    	for(Assessment a: assessments) {
-		    		if(courseCode == a.getCourseCode() && studentid == a.getAssociatedID()) {
+		    		if(courseCode.equals(a.getCourseCode()) && studentid == a.getAssociatedID()) {
+		    			found = true;
 		    			return a;
 		    		}
 		    	}
@@ -89,7 +95,10 @@ public class ExamEngine implements ExamServer {
     	}
         // TBD: You need to implement this method!
         // For the moment method just returns an empty or null value to allow it to compile
-    	throw new NoMatchingAssessment("[-] Tough luck. Something went wrong.");
+    	if (!found) {
+    		throw new NoMatchingAssessment("[-] Tough luck. Something went wrong.");
+    	}
+    	return null;
     }
 
     // Submit a completed assessment
@@ -101,6 +110,7 @@ public class ExamEngine implements ExamServer {
 		    		if(studentid == a.getAssociatedID() && new Date().before(a.getClosingDate())) { 
 		    			//mark as completed
 		    			System.out.println("[+] The submission for " + studentid + " has been successful.");
+		    			return;
 		    		}
 		    	}
 		    	break; //same as above
@@ -113,8 +123,8 @@ public class ExamEngine implements ExamServer {
     public static void main(String[] args) {
     	
     	try {
-    		System.setProperty("java.security.policy","file:/home/jo/Documents/CT414-RMI/bin/ct414/ct414.policy");
-    	
+//    		System.setProperty("java.security.policy","file:/home/jo/Documents/CT414-RMI/bin/ct414/ct414.policy");
+    		System.setProperty("java.security.policy", "C:\\Users\\Labhras-Laptop\\Documents\\College Work\\CT414_Distro\\Assignment1\\CT414-RMI\\src\\ct414\\ct414.policy");
     	}catch (Exception e) {
     		System.out.println("[-] Check policy file");
     		e.printStackTrace();
@@ -127,7 +137,7 @@ public class ExamEngine implements ExamServer {
             String name = "ExamServer";
             ExamServer engine = new ExamEngine();
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
-            stub.login(12345678, "coder4567");
+//            stub.login(12345678, "coder4567");
             //changed getRegistry() to createRegistry(int) : was throwing java.rmi.UnmarshalException and java.lang.ClassNotFoundException otherwise
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind(name, stub);

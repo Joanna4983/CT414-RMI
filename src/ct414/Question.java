@@ -28,6 +28,9 @@ public class Question implements Question_Interface {
 	@Override
 	public String[] getAnswerOptions() {
 		// TODO Auto-generated method stub
+		for (String option: this.options){
+			System.out.println(option);
+		}
 		return options;
 	}
 

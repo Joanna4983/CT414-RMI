@@ -36,7 +36,11 @@ public class Assessment implements Assessment_Interface {
 	public String getInformation() {
 		String info = this.info;
 		for(Question q: mcqs) {
-			info += "\nQuestion #" + q.getQuestionNumber() + "\t" + q.getQuestionDetail() + "\nAnswer Options: " + q.getAnswerOptions();
+			info += "\nQuestion #" + q.getQuestionNumber() + "\t" + q.getQuestionDetail() 
+			+ "\nAnswer Options: ";
+			for (String answer: q.getAnswerOptions()) {
+				info += answer + ", ";
+			}
 		}
 		// TODO Auto-generated method stub
 		return info;
