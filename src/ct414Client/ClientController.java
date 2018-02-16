@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.util.List;
 
 import ct414.ExamServer;
+import ct414.UnauthorizedAccess;
 import ct414.Assessment_Interface;
 
 public class ClientController {
@@ -28,6 +29,8 @@ public class ClientController {
 		this.password = password;
 		try {
 			this.loginToken = examServer.login(this.studentId, this.password);
+		} catch (UnauthorizedAccess e) {
+			this.loginToken = 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
