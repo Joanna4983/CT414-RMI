@@ -15,6 +15,7 @@ public class ClientGUI extends JFrame {
 	private ClientController controller;
 	
 	private Container container;
+	private JTextField errorMessage;
 	
 	/* Login Components */
 	private JTextField usernameText, usernameInput, passwordText;
@@ -49,7 +50,7 @@ public class ClientGUI extends JFrame {
 		
 		setupLoginGUI();
 		
-		setSize( 325, 100 );
+		setSize( 325, 300 );
 		setVisible( true );
 		
 	}
@@ -81,18 +82,16 @@ public class ClientGUI extends JFrame {
 		    String password = new String(passwordField.getPassword());
 		    boolean success = controller.login(username, password);
 		    if (success) {
-		    	removeLoginGUI();
+		    	clearUI();
 		    	setupAssessmentsView();
+		    } else {
+		    	displayErrorMessage("Could not find login user " + username);
 		    }
 		}
 	}
 	
-	private void removeLoginGUI() {
-		container.remove(usernameText);
-		container.remove(usernameInput);
-		container.remove(passwordText);
-		container.remove(passwordField);
-		container.remove(loginButton);
+	private void clearUI() {
+		container.removeAll();
 		container.validate();
 		container.repaint();
 	}
@@ -116,32 +115,31 @@ public class ClientGUI extends JFrame {
 		
 	}
 	
+	private void displayErrorMessage(String message) {
+		errorMessage = new JTextField( message, 20 );
+		errorMessage.setEditable( false );
+		container.add( errorMessage );
+		container.validate();
+		container.repaint();
+	}
+	
 	private class AssessmentsListViewerHandler implements ActionListener {
 	    public void actionPerformed( ActionEvent event )
 	    {
 		    String selected = (String) availableAssessmentsComboBox.getSelectedItem();
 		    Assessment_Interface assessment = controller.getAssessment(selected);
 		    if (assessment != null) {
-		    	removeAssessmentsView();
+		    	clearUI();
 		    	setupSpecificAssessmentView(assessment);
+		    } else {
+		    	displayErrorMessage("No assessments available!");
 		    }
 		}
-	}
-	
-	private void removeAssessmentsView() {
-		container.remove(availableAssessmentsComboBox);
-		container.remove(getAssessmentButton);
-		container.validate();
-		container.repaint();		
 	}
 	
 	private void setupSpecificAssessmentView(Assessment_Interface assessment) {
 		ArrayList<Question> questions = (ArrayList<Question>) assessment.getQuestions();
 
-		// TODO
-		// display one question at a time
-		// have specific handlers for next question vs submit
-		
 		displayQuestion(questions.get(nextQuestionToDisplay));
 		nextQuestionToDisplay++;
 		
@@ -157,8 +155,7 @@ public class ClientGUI extends JFrame {
 		assessmentButton = new JButton(buttonText);
 		container.add(assessmentButton);
 		assessmentButton.addActionListener(handler);
-		
-		setSize( 325, 300 );
+
 		setVisible(true);
 	}
 	
@@ -195,8 +192,10 @@ public class ClientGUI extends JFrame {
 	    	if (success) {
 	    		controller.submitAssessment(this.currentAssessment);
 	    		JOptionPane.showMessageDialog( null, "Assessment Submitted!");
-	    		removeSpecificAssessmentView();
+	    		clearUI();
 	    		setupAssessmentsView();
+	    	} else {
+	    		displayErrorMessage("Please select an Answer!");
 	    	}
 		}
 	}
@@ -212,8 +211,10 @@ public class ClientGUI extends JFrame {
 	    	boolean success = selectAnswersFromGUI(this.currentAssessment);
 	    	
 	    	if (success) {
-		    	removeSpecificAssessmentView();
+	    		clearUI();
 		    	setupSpecificAssessmentView(this.currentAssessment);	
+	    	} else {
+	    		displayErrorMessage("Please select an Answer!");
 	    	}
 		}
 	}
@@ -239,12 +240,6 @@ public class ClientGUI extends JFrame {
 			e.printStackTrace();
 		}
 		return true;
-	}
-	
-	private void removeSpecificAssessmentView() {
-		container.removeAll();
-		container.validate();
-		container.repaint();		
 	}
 
 }
