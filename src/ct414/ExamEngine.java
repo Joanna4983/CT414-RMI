@@ -28,8 +28,7 @@ public class ExamEngine implements ExamServer {
         mcqs = new ArrayList<Question>();
         
         //testing
-        students.add(new Student(12345678, "GY350", "coder4567")); 
-        students.add(new Student(12312312, "GY350", "superStudent123"));
+        students.add(new Student(12345678, "GY350", "coder4567"));
         
         String[] a = {"6", "5", "8"};
         mcqs.add(new Question(1, "What is 2^3?", a, "8"));

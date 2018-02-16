@@ -6,6 +6,7 @@ package ct414;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * @author root
@@ -18,6 +19,7 @@ public class Assessment implements Assessment_Interface {
 	private List<Question> mcqs = new ArrayList<Question>();
 	private int id;
 	private String course_code;
+	private HashMap<Integer, Integer> selectedAnswers = new HashMap<Integer, Integer>();
 	
 	public Assessment(String info, Date close_d, List<Question> mcqs, int id, String c_c) {
 		this.info = info;
@@ -34,16 +36,7 @@ public class Assessment implements Assessment_Interface {
 
 	@Override
 	public String getInformation() {
-		String info = this.info;
-		for(Question q: mcqs) {
-			info += "\nQuestion #" + q.getQuestionNumber() + "\t" + q.getQuestionDetail() 
-			+ "\nAnswer Options: ";
-			for (String answer: q.getAnswerOptions()) {
-				info += answer + ", ";
-			}
-		}
-		// TODO Auto-generated method stub
-		return info;
+		return this.course_code;
 	}
 
 	
@@ -56,8 +49,6 @@ public class Assessment implements Assessment_Interface {
 	
 	@Override
 	public List<Question> getQuestions() {
-		
-		
 		// TODO Auto-generated method stub
 		return this.mcqs;
 	}
@@ -75,8 +66,8 @@ public class Assessment implements Assessment_Interface {
 	
 	@Override
 	public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber {
-		// TODO Auto-generated method stub
-
+		System.out.println("SelectAnswer called: " + questionNumber + ", " + optionNumber);
+		selectedAnswers.put(questionNumber, optionNumber);
 	}
 
 	
